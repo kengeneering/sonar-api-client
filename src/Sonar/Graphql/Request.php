@@ -99,8 +99,6 @@ class Request
      */
     public function rawQuery(string $query = '', array $variables = [], ?Client $client = null)
     {
-        $dotenv = \Dotenv\Dotenv::createImmutable(dirname(__DIR__, 3));
-        $dotenv->load();
         if (!isset($_ENV['SONAR_URL']) || !isset($_ENV['SONAR_KEY'])) {
             throw new \InvalidArgumentException('Missing required Sonar credentials in .env file');
         }
