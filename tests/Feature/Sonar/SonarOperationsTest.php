@@ -12,6 +12,14 @@ use GuzzleHttp\Client;
 
 class SonarOperationsTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Load test environment file
+        $dotenv = \Dotenv\Dotenv::createImmutable(dirname(dirname(dirname(__DIR__))));
+        $dotenv->load();
+    }
     public function test_query_get()
     {
 
@@ -166,48 +174,48 @@ class SonarOperationsTest extends TestCase
             ->onlyMethods(['getContents'])
             ->getMock();
 
-            $result = [
-                'data' => [
-                    'operation_0' => [
-                        'id' => 12321,
-                    ],
+        $result = [
+            'data' => [
+                'operation_0' => [
+                    'id' => 12321,
                 ],
-            ];
-            $mockBody->method('getContents')
-                ->willReturn(json_encode($result));
-    
-            $mockResponse->method('getStatusCode')->willReturn(200);
-            $mockResponse->method('getBody')->willReturn($mockBody);
-    
-            $mockClient->expects($this->once())
-                ->method('post')
-                ->with(
-                    'url',
-                    $this->callback(function ($options) {
-    
-                        $pattern = '/mutation request\( \$[a-z]+: CreateAccountStatusMutationInput \) {operation_0: createAccountStatus\(input: \$[a-z]+ \) {id sonar_unique_id created_at updated_at _version activates_account color icon name} }/';
-    
-                        if (!preg_match($pattern, $options['json']['query'])) {
+            ],
+        ];
+        $mockBody->method('getContents')
+            ->willReturn(json_encode($result));
+
+        $mockResponse->method('getStatusCode')->willReturn(200);
+        $mockResponse->method('getBody')->willReturn($mockBody);
+
+        $mockClient->expects($this->once())
+            ->method('post')
+            ->with(
+                'url',
+                $this->callback(function ($options) {
+
+                    $pattern = '/mutation request\( \$[a-z]+: CreateAccountStatusMutationInput \) {operation_0: createAccountStatus\(input: \$[a-z]+ \) {id sonar_unique_id created_at updated_at _version activates_account color icon name} }/';
+
+                    if (!preg_match($pattern, $options['json']['query'])) {
+                        return false;
+                    }
+
+                    foreach ($options['json']['variables'] as $variable) {
+                        if (
+                            $variable !== [
+                                'activates_account' => 'fake_value_1',
+                                'color' => 'fake_value_1',
+                                'icon' => 'fake_value_1',
+                                'name' => 'fake_value_1',
+                            ]
+                        ) {
                             return false;
                         }
-    
-                        foreach ($options['json']['variables'] as $variable) {
-                            if (
-                                $variable !== [
-                                    'activates_account' => 'fake_value_1',
-                                    'color' => 'fake_value_1',
-                                    'icon' => 'fake_value_1',
-                                    'name' => 'fake_value_1',
-                                ]
-                            ) {
-                                return false;
-                            }
-                        }
-    
-                        return true;
-                    })
-                )
-                ->willReturn($mockResponse);
+                    }
+
+                    return true;
+                })
+            )
+            ->willReturn($mockResponse);
 
         $as = new AccountStatus([
             'id' => 'fake_value_1',
@@ -221,7 +229,7 @@ class SonarOperationsTest extends TestCase
             'name' => 'fake_value_1',
         ]);
 
-        $r = new Request('mutation', [] , $mockClient);
+        $r = new Request('mutation', [], $mockClient);
 
         $r->addOperations([$as]);
 

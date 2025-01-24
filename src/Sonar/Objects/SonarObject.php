@@ -50,7 +50,7 @@ class SonarObject
         $namespace = "Kengineering\Sonar\Objects\\";
 
         foreach (static::PROPERTIES as $property) {
-            $this->property_values[$property] = $object_info[$property];
+            $this->property_values[$property] = $object_info[$property] ?? null;
         }
 
         foreach (static::RELATED_OBJECTS as $object_name => $related_object) {

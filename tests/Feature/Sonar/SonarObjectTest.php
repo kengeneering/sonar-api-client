@@ -10,6 +10,14 @@ use GuzzleHttp\Client;
 
 class SonarObjectTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Load test environment file
+        $dotenv = \Dotenv\Dotenv::createImmutable(dirname(dirname(dirname(__DIR__))));
+        $dotenv->load();
+    }
     public function test_create()
     {
 
@@ -466,7 +474,7 @@ class SonarObjectTest extends TestCase
                 $this->callback(function ($options) {
                     $pattern = '/mutation request\( \$[a-z]{26}: Int64Bit! \) {operation_0: deleteAccountStatus\(id: \$[a-z]{26} \) {success message} }/';
 
-                    
+
 
                     if (!preg_match($pattern, $options['json']['query'])) {
                         return false;

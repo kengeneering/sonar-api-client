@@ -10,7 +10,14 @@ use PHPUnit\Framework\TestCase;
 
 class AccountTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
 
+        // Load test environment file
+        $dotenv = \Dotenv\Dotenv::createImmutable(dirname(dirname(dirname(__DIR__))));
+        $dotenv->load();
+    }
     public function test_add_service_non_batched_request()
     {
 

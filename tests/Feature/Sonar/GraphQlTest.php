@@ -12,10 +12,14 @@ use GuzzleHttp\Client;
 
 class GraphQlTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     */
+    protected function setUp(): void
+    {
+        parent::setUp();
 
+        // Load test environment file
+        $dotenv = \Dotenv\Dotenv::createImmutable(dirname(dirname(dirname(__DIR__))));
+        $dotenv->load();
+    }
     public function testRawQuery()
     {
         $mockClient = $this->getMockBuilder(Client::class)

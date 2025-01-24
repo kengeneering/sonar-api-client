@@ -16,6 +16,14 @@ use GuzzleHttp\Psr7\Stream;
 
 class BasicObjectTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Load test environment file
+        $dotenv = \Dotenv\Dotenv::createImmutable(dirname(dirname(dirname(dirname(__DIR__)))));
+        $dotenv->load();
+    }
     public function test_basic_construction()
     {
         $as = new AccountStatus([
