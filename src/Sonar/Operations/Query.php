@@ -201,7 +201,6 @@ class Query extends GraphqlQuery
     public function reverseRelationSearch(string $relation, callable $rrf_search, bool $is_empty = false, int $group = 1): self
     {
 
-        //# make it so that if nothing is passed to it it is still fine
         $rrf = new Search;
         $rrf_search($rrf);
 

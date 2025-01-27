@@ -54,6 +54,29 @@ $accounts_with_details = Accounts::query()
 
 The query structure follows Sonar's GraphQL schema as a node tree. Use `addToParent()` to query related parent objects, `addToChild()` for child objects, and `end()` when you need to traverse multiple relationship layers.
 
+## Searching In Queries
+
+Every query instance provides search capabilities through its `search` property. You can apply various search filters:
+
+```php
+$account = Account::query()->search->intSearch('id', 12321);
+
+$account = Account::query()
+    ->search->stringSearch('name', 'John')
+    ->search->intSearch('age', 25);
+```
+
+### Relation Searching
+To search through related models, use `reverseRelationSearch`. This method accepts the relation name and a callback to define search criteria:
+
+```php
+$account = Account::query()
+    ->addToChild(AccountStatus::class)
+    ->reverseRelationSearch('account_status', function(Search $search) {
+        $search->stringSearch('name', 'active');
+    });
+```
+
 ### Saving Objects
 
 Objects can be created in Sonar in two ways. You can either set properties after instantiation or pass them through the constructor:
