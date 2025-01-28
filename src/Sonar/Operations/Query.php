@@ -166,9 +166,7 @@ class Query extends GraphqlQuery
         } else {
             /** @var class-string<\Kengineering\Sonar\Objects\SonarObject> $parent_value */
             $parent_value = $parent_node->value;
-            $relationship_values = $parent_value::object_relationship($root_object);
-            $custom_access_name = $relationship_values['access_name'] ?? null;
-            $relationship = $relationship_values['relationship'];
+            $relationship = $parent_value::object_relationship($root_object);
         }
 
         $inner_properties = [
@@ -178,21 +176,21 @@ class Query extends GraphqlQuery
 
         if ($relationship === 'many') {
 
-            $access_name = $custom_access_name ?? ($root_object::OBJECT_MULTIPLE_NAME ?? "{$object_name}s");
+            $access_name = $root_object::OBJECT_MULTIPLE_NAME ?? "{$object_name}s";
             $fields_array = [
                 (new GraphqlQuery('entities', $inner_properties)),
             ];
         } elseif ($relationship === 'one') {
 
-            $access_name = $custom_access_name ?? ($root_object::OBJECT_SINGLE_NAME ?? $object_name);
+            $access_name = $root_object::OBJECT_SINGLE_NAME ?? $object_name;
             $fields_array = $inner_properties;
         } elseif ($relationship === 'owned_by') {
             $fields_array = [
                 (new GraphqlQuery('__typename ... on  ' . ucfirst($root_object::OBJECT_SINGLE_NAME ?? $object_name), $inner_properties)),
             ];
-            $access_name = $custom_access_name ?? (($parent_value ?? '')::OWNED_ACCESS_NAME);
+            $access_name = ($parent_value ?? '')::OWNED_ACCESS_NAME;
         } else {
-            throw new Exception('undefined relationsip type');
+            throw new Exception('undefined relationsip type');// @codeCoverageIgnore
         }
 
         return new GraphqlQuery($access_name, $fields_array);

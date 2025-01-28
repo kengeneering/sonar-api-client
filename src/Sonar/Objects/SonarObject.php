@@ -55,9 +55,7 @@ class SonarObject
 
         foreach (static::RELATED_OBJECTS as $object_name => $related_object) {
 
-            $relationship_values = static::define_relationship($related_object);
-
-            $relationship = $relationship_values['relationship'];
+            $relationship = $related_object;
 
             /**
              * @var class-string<self> $object_location
@@ -65,7 +63,7 @@ class SonarObject
             $object_location = $namespace . str_replace(' ', '', ucwords(str_replace(['_', '-'], ' ', $object_name)));
 
             if ($relationship === 'many') {
-                $access_name = $relationship_values['access_name'] ?? ($object_location::OBJECT_MULTIPLE_NAME ?? "{$object_name}s");
+                $access_name = $object_location::OBJECT_MULTIPLE_NAME ?? "{$object_name}s";
                 if (isset($object_info[$access_name])) {
                     $object_list = [];
                     foreach ($object_info[$access_name]['entities'] as $object) {
@@ -74,7 +72,7 @@ class SonarObject
                     $this->$access_name = $object_list;
                 }
             } elseif ($relationship === 'one') {
-                $access_name = $relationship_values['access_name'] ?? $object_name;
+                $access_name = $object_name;
                 if (isset($object_info[$access_name])) {
                     $this->$access_name = new $object_location($object_info[$access_name], true);
                 }
@@ -83,7 +81,7 @@ class SonarObject
                     defined(static::class . '::OWNED_ACCESS_NAME') &&
                     isset($object_info[static::OWNED_ACCESS_NAME])
                 ) {
-                    $access_name = $relationship_values['access_name'] ?? static::OWNED_ACCESS_NAME;
+                    $access_name = static::OWNED_ACCESS_NAME;
                     /** @var array{__typename: string, ...} $owned_data */
                     $owned_data = $object_info[$access_name];
                     if (class_exists($namespace . $owned_data['__typename'])) {
@@ -146,7 +144,9 @@ class SonarObject
 
         return $first;
     }
-
+    /**
+     * @param  ?array<mixed>  $delete_input
+     */
     public function mutation(string $type, $delete_input = null): Mutation
     {
         return new Mutation(object: $this, type: $type, client: $this->client, delete_input: $delete_input);
@@ -191,7 +191,9 @@ class SonarObject
 
         return $this;
     }
-
+    /**
+     * @param  ?array<mixed>  $input
+     */
     public function delete(bool $batch_request = false, array $input = null): ?Mutation
     {
         $mutation = $this->mutation('delete', $input);
@@ -220,9 +222,9 @@ class SonarObject
     }
 
     /**
-     * @return array<string>
+     * @return string
      */
-    public static function object_relationship(string $object): array
+    public static function object_relationship(string $object)
     {
         /** @phpstan-ignore-next-line */
         $object_name = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', basename(str_replace('\\', '/', $object))));
@@ -230,20 +232,7 @@ class SonarObject
             throw new Exception('this class does not have a relation to the parent class');
         }
 
-        return static::define_relationship(static::RELATED_OBJECTS[$object_name]);
-    }
-
-    /**
-     * @param  string|array<string>  $relationship_definition
-     * @return array<string, string>
-     */
-    public static function define_relationship($relationship_definition): array
-    {
-        if (is_array($relationship_definition)) {
-            return $relationship_definition;
-        } else {
-            return ['relationship' => $relationship_definition];
-        }
+        return static::RELATED_OBJECTS[$object_name];
     }
 
     /**

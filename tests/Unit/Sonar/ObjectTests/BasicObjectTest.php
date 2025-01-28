@@ -242,7 +242,7 @@ class BasicObjectTest extends TestCase
         $this->assertEquals($as->mutation('create'), new Mutation($as, 'create'));
     }
 
-    public function test_batch_update()
+    public function test_batch()
     {
 
         $as = new AccountStatus([
@@ -259,26 +259,69 @@ class BasicObjectTest extends TestCase
         $this->assertEquals($as->batch(), new Mutation($as, 'update'));
     }
 
+    public function test_batch_update()
+    {
+
+        $as = new AccountStatus([
+            'id' => 'fake_value_0',
+            'sonar_unique_id' => 'fake_value_0',
+            'created_at' => 'fake_value_0',
+            'updated_at' => 'fake_value_0',
+            '_version' => 'fake_value_0',
+            'activates_account' => 'fake_value_0',
+            'color' => 'fake_value_0',
+            'icon' => 'fake_value_0',
+            'name' => 'fake_value_0',
+        ], true);
+
+        $query = $as->save(true);
+        $this->assertEquals($query, new Mutation($as, 'update'));
+
+    }
+
     public function test_batch_create()
     {
 
         $as = new AccountStatus([
-            'id' => 12321,
-            'sonar_unique_id' => 'fake_value',
-            'created_at' => 'fake_value',
-            'updated_at' => 'fake_value',
-            '_version' => 'fake_value',
-            'activates_account' => 'fake_value',
-            'color' => 'fake_value',
-            'icon' => 'fake_value',
-            'name' => 'fake_value',
-        ]);
-        $this->assertEquals($as->batch(), new Mutation($as, 'create'));
+            'id' => 'fake_value_0',
+            'sonar_unique_id' => 'fake_value_0',
+            'created_at' => 'fake_value_0',
+            'updated_at' => 'fake_value_0',
+            '_version' => 'fake_value_0',
+            'activates_account' => 'fake_value_0',
+            'color' => 'fake_value_0',
+            'icon' => 'fake_value_0',
+            'name' => 'fake_value_0',
+        ], false);
+
+        $query = $as->save(true);
+        $this->assertEquals($query, new Mutation($as, 'create'));
+
+    }
+
+    public function test_batch_delete()
+    {
+
+        $as = new AccountStatus([
+            'id' => 'fake_value_0',
+            'sonar_unique_id' => 'fake_value_0',
+            'created_at' => 'fake_value_0',
+            'updated_at' => 'fake_value_0',
+            '_version' => 'fake_value_0',
+            'activates_account' => 'fake_value_0',
+            'color' => 'fake_value_0',
+            'icon' => 'fake_value_0',
+            'name' => 'fake_value_0',
+        ], true);
+
+        $query = $as->delete(true);
+        $this->assertEquals($query, new Mutation($as, 'delete'));
+
     }
 
     public function test_relationship()
     {
-        $this->assertEquals(Account::object_relationship(AccountStatus::class), ['relationship' => 'one']);
+        $this->assertEquals(Account::object_relationship(AccountStatus::class), 'one');
         $this->expectException(\Exception::class);
         AccountType::object_relationship(AccountStatus::class);
     }
@@ -305,6 +348,19 @@ class BasicObjectTest extends TestCase
             '_version' => 'fake',
         ]);
         $this->assertEquals($so->get_mutation_input_name('create'), 'CreateSonarObjectMutationInput');
+    }
+
+    public function test_cant_refresh_object()
+    {
+        $so = new SonarObject([
+            'id' => 'fake',
+            'sonar_unique_id' => 'fake',
+            'created_at' => 'fake',
+            'updated_at' => 'fake',
+            '_version' => 'fake',
+        ]);
+        $this->expectException(\Exception::class);
+        $so->refresh_object([]);
     }
 
     public function test_update_object()

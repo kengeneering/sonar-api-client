@@ -71,4 +71,11 @@ class RequestTest extends TestCase
 
         $request = new Request('not_a_query', [$query]);
     }
+
+    public function test_()
+    {
+        $request = new Request('query');
+        $this->expectException(\InvalidArgumentException::class);
+        $request->rawQuery('test', []);
+    }
 }

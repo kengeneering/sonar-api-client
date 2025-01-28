@@ -9,14 +9,14 @@ use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Stream;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\Request as GRequest;
 
 class GraphQlTest extends TestCase
 {
     protected function setUp(): void
     {
         parent::setUp();
-
-        // Load test environment file
         $dotenv = \Dotenv\Dotenv::createImmutable(dirname(dirname(dirname(__DIR__))));
         $dotenv->load();
     }
@@ -217,6 +217,40 @@ class GraphQlTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $request->sendRequest();
     }
+
+    public function test_sending_request_low_level_fail()
+    {
+        $mockClient = $this->getMockBuilder(Client::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['post'])
+            ->getMock();
+
+        $mockClient->expects($this->once())
+            ->method('post')
+            ->with(
+                'url',
+                $this->callback(function ($options) {
+                    return $options['json'] === [
+                        'query' => 'query request {operation_name: test_name {test0 test1 test2 test3} }',
+                        'variables' => []
+                    ];
+                })
+            )
+            ->willThrowException(
+                new RequestException(
+                    'Server error',
+                    new GRequest('POST', 'url')
+                )
+            );
+
+        $query = new Query('test_name', ['test0', 'test1', 'test2', 'test3']);
+        $request = new Request('query', ['name' => $query], $mockClient);
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $response = $request->sendRequest();
+    }
+
 
     public function test_sending_request_errors()
     {

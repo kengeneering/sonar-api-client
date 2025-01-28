@@ -22,9 +22,13 @@ class Mutation extends GraphqlQuery
 
     public GraphqlQuery $raw_query;
     private ?Client $client;
-
+    /**
+     * @var  ?array<mixed>  $delete_input
+     */
     private ?array $delete_input;
-
+    /**
+     * @param  ?array<mixed>  $delete_input
+     */
     public function __construct(
         SonarObject $object = (new SonarObject([])),
         string $type = '',

@@ -104,7 +104,7 @@ class Request
         }
 
         if (is_null($client)) {
-            $client = new Client();
+            $client = new Client();// @codeCoverageIgnore
         }
 
         $post_data = [

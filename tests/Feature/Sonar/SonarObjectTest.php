@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Stream;
 use GuzzleHttp\Client;
+use Kengineering\Sonar\Objects\Account;
 use Kengineering\Sonar\Objects\AccountService;
 
 class SonarObjectTest extends TestCase
@@ -173,6 +174,8 @@ class SonarObjectTest extends TestCase
 
         $as->save();
     }
+
+
 
     public function test_get()
     {
@@ -507,6 +510,94 @@ class SonarObjectTest extends TestCase
         ], true, $mockClient);
 
         $as->delete();
+    }
+
+    public function test_refresh_object_fail()
+    {
+
+        $mockClient = $this->getMockBuilder(Client::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['post'])
+            ->getMock();
+
+        $mockResponse = $this->getMockBuilder(Response::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getStatusCode', 'getBody'])
+            ->getMock();
+
+        $mockBody = $this->getMockBuilder(Stream::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getContents'])
+            ->getMock();
+
+
+        $result = [
+            'data' => [
+                'operation_0' => [
+                    'entities' => []
+                ],
+            ],
+        ];
+        $mockBody->method('getContents')
+            ->willReturn(json_encode($result));
+
+        $mockResponse->method('getStatusCode')->willReturn(200);
+        $mockResponse->method('getBody')->willReturn($mockBody);
+
+        $mockClient->expects($this->once())
+            ->method('post')
+            ->with(
+                'url',
+                $this->callback(function ($options) {
+                    $pattern = '/query request\( \$[a-z]{26}: \[Search\]  \$[a-z]{26}: Paginator \) {operation_0: account_statuses\(search: \$[a-z]{26} paginator: \$[a-z]{26} \) { entities {id sonar_unique_id created_at updated_at _version activates_account color icon name accounts { entities {id sonar_unique_id created_at updated_at _version account_status_id account_type_id activation_date activation_time company_id data_usage_percentage is_delinquent name next_bill_date next_recurring_charge_amount parent_account_id}}}} }/';
+
+
+                    if (!preg_match($pattern, $options['json']['query'])) {
+                        return false;
+                    }
+
+                    foreach ($options['json']['variables'] as $variable) {
+                        if (
+                            $variable !== [
+                                [
+                                    'integer_fields' =>
+                                        [
+                                            [
+                                                'attribute' => 'id',
+                                                'search_value' => 12321,
+                                                'operator' => 'EQ'
+                                            ]
+                                        ]
+                                ]
+                            ] && $variable !== [
+                                'page' => 1,
+                                'records_per_page' => 100
+                            ]
+                        ) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                })
+            )
+            ->willReturn($mockResponse);
+
+        $as = new AccountStatus([
+            'id' => 12321,
+            'sonar_unique_id' => 'fake_value_0',
+            'created_at' => 'fake_value_0',
+            'updated_at' => 'fake_value_0',
+            '_version' => 'fake_value_0',
+            'activates_account' => 'fake_value_0',
+            'color' => 'fake_value_0',
+            'icon' => 'fake_value_0',
+            'name' => 'fake_value_0',
+        ], true, $mockClient);
+
+        $this->expectException(\Exception::class);
+
+        $as->refresh_object([Account::class]);
     }
 
 
