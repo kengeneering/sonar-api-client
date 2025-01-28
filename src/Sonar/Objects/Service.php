@@ -18,6 +18,7 @@ namespace Kengineering\Sonar\Objects;
  * @property int $tax_definition_id
  * @property int $type
  * @property array<PackageService> $package_services
+ * @property array<DataServiceDetail> $data_service_detail
  */
 class Service extends SonarObject
 {
@@ -41,5 +42,6 @@ class Service extends SonarObject
 
     const RELATED_OBJECTS = [
         'package_service' => 'many',
+        'data_service_detail' => 'one',
     ];
 }

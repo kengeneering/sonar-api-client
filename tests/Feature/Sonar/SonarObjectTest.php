@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Stream;
 use GuzzleHttp\Client;
+use Kengineering\Sonar\Objects\AccountService;
 
 class SonarObjectTest extends TestCase
 {
@@ -506,5 +507,87 @@ class SonarObjectTest extends TestCase
         ], true, $mockClient);
 
         $as->delete();
+    }
+
+
+    public function test_delete_with_input()
+    {
+
+        $mockClient = $this->getMockBuilder(Client::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['post'])
+            ->getMock();
+
+        $mockResponse = $this->getMockBuilder(Response::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getStatusCode', 'getBody'])
+            ->getMock();
+
+        $mockBody = $this->getMockBuilder(Stream::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getContents'])
+            ->getMock();
+
+
+        $result = [
+            'data' => [
+                'operation_0' => [
+                    'id' => 12321,
+                ],
+            ],
+        ];
+        $mockBody->method('getContents')
+            ->willReturn(json_encode($result));
+
+        $mockResponse->method('getStatusCode')->willReturn(200);
+        $mockResponse->method('getBody')->willReturn($mockBody);
+
+        $mockClient->expects($this->once())
+            ->method('post')
+            ->with(
+                'url',
+                $this->callback(function ($options) {
+                    $pattern = '/mutation request\( \$[a-z]{26}: Int64Bit!  \$[a-z]{26}: DeleteAccountServiceMutationInput \) {operation_0: deleteAccountService\(id: \$[a-z]{26} input: \$[a-z]{26} \) {success message} }/';
+
+
+
+                    if (!preg_match($pattern, $options['json']['query'])) {
+                        return false;
+                    }
+
+                    foreach ($options['json']['variables'] as $variable) {
+                        if (
+                            $variable !== 12321 && $variable !== ['insert_var' => 'test']
+                        ) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                })
+            )
+            ->willReturn($mockResponse);
+
+        $as = new AccountService([
+            'id' => 12321,
+            'sonar_unique_id' => 'fake_value',
+            'created_at' => 'fake_value',
+            'updated_at' => 'fake_value',
+            '_version' => 'fake_value',
+            'account_id' => 'fake_value',
+            'addition_prorate_date' => 'fake_value',
+            'data_usage_last_calculated_date' => 'fake_value',
+            'name_override' => 'fake_value',
+            'next_bill_date' => 'fake_value',
+            'number_of_times_billed' => 'fake_value',
+            'package_id' => 'fake_value',
+            'price_override' => 'fake_value',
+            'price_override_reason' => 'fake_value',
+            'quantity' => 'fake_value',
+            'service_id' => 'fake_value',
+            'unique_package_relationship_id' => 'fake_value',
+        ], true, $mockClient);
+
+        $as->delete(false, ['insert_var' => 'test']);
     }
 }

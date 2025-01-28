@@ -54,7 +54,7 @@ class QueryTest extends TestCase
     public function test_custom_paginator()
     {
         $query = new Query(AccountStatus::class);
-        $query->paginate(2, 200);
+        $query->paginate(200, 2);
         $Gquery = $query->build();
 
         //dd($Gquery);

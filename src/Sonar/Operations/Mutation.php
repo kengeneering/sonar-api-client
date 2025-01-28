@@ -23,8 +23,15 @@ class Mutation extends GraphqlQuery
     public GraphqlQuery $raw_query;
     private ?Client $client;
 
-    public function __construct(SonarObject $object = (new SonarObject([])), string $type = '', ?GraphqlQuery $raw_query = null, ?Client $client = null)
-    {
+    private ?array $delete_input;
+
+    public function __construct(
+        SonarObject $object = (new SonarObject([])),
+        string $type = '',
+        array $delete_input = null,
+        ?GraphqlQuery $raw_query = null,
+        ?Client $client = null
+    ) {
         $this->client = $client;
         if (isset($raw_query)) {
             $this->raw_query = $raw_query;
@@ -32,6 +39,7 @@ class Mutation extends GraphqlQuery
             if (!in_array($type, ['create', 'update', 'delete'], true)) {
                 throw new \InvalidArgumentException('Type must be either "create". "delete" or "update"');
             }
+            $this->delete_input = $delete_input;
             $this->object = $object;
             $this->type = $type;
         }
@@ -76,6 +84,12 @@ class Mutation extends GraphqlQuery
         if (in_array($type, ['update', 'delete'], true)) {
             $query->addVariable(['id' => $object->id], 'Int64Bit', true);
             $this->addVariable(['id' => $object->id], 'Int64Bit', true);
+        }
+        if (in_array($type, ['delete'])) {
+            if (!is_null($this->delete_input)) {
+                $query->addVariable(['input' => $this->delete_input], $mutation_input_name, false);
+                $this->addVariable(['input' => $this->delete_input], $mutation_input_name, false);
+            }
         }
 
 

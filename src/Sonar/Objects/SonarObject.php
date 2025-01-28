@@ -69,14 +69,14 @@ class SonarObject
                 if (isset($object_info[$access_name])) {
                     $object_list = [];
                     foreach ($object_info[$access_name]['entities'] as $object) {
-                        $object_list[] = new $object_location($object);
+                        $object_list[] = new $object_location($object, true);
                     }
                     $this->$access_name = $object_list;
                 }
             } elseif ($relationship === 'one') {
                 $access_name = $relationship_values['access_name'] ?? $object_name;
                 if (isset($object_info[$access_name])) {
-                    $this->$access_name = new $object_location($object_info[$access_name]);
+                    $this->$access_name = new $object_location($object_info[$access_name], true);
                 }
             } elseif ($relationship === 'owned_by') {
                 if (
@@ -91,7 +91,7 @@ class SonarObject
                         $sub_object_info = $owned_data['__typename'];
                         $access_name = lcfirst($sub_object_info);
                         $object_class = $namespace . $sub_object_info;
-                        $this->$access_name = new $object_class($owned_data);
+                        $this->$access_name = new $object_class($owned_data, true);
                     }
                 }
             }
@@ -147,9 +147,9 @@ class SonarObject
         return $first;
     }
 
-    public function mutation(string $type): Mutation
+    public function mutation(string $type, $delete_input = null): Mutation
     {
-        return new Mutation(object: $this, type: $type, client: $this->client);
+        return new Mutation(object: $this, type: $type, client: $this->client, delete_input: $delete_input);
     }
 
     public function batch(): Mutation
@@ -192,9 +192,9 @@ class SonarObject
         return $this;
     }
 
-    public function delete(bool $batch_request = false): ?Mutation
+    public function delete(bool $batch_request = false, array $input = null): ?Mutation
     {
-        $mutation = $this->mutation('delete');
+        $mutation = $this->mutation('delete', $input);
 
         if ($batch_request) {
             return $mutation;

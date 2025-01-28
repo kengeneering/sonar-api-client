@@ -217,7 +217,9 @@ class Query extends GraphqlQuery
         return $this;
     }
 
-    public function paginate(int $page, int $records_per_page = 100): self
+
+    ## :TODO flip the order of paramaters to be able to just set the number of records
+    public function paginate(int $records_per_page = 100, int $page = 1): self
     {
         $this->page = $page;
         $this->records_num = $records_per_page;

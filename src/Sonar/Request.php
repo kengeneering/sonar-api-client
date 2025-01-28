@@ -14,6 +14,7 @@ class Request extends GraphqlRequest
      */
     public function addOperations($operations): Request
     {
+        $is_associative = array_keys($operations) !== range(0, count($operations) - 1);
         foreach ($operations as $name => $operation) {
             if ($operation instanceof SonarObject) {
                 $operation = $operation->batch();
@@ -21,7 +22,11 @@ class Request extends GraphqlRequest
             } else {
                 throw new \Exception('bad request made');
             }
-            $this->operations[$name] = $operation;
+            if ($is_associative) {
+                $this->operations[$name] = $operation;
+            } else {
+                $this->operations[] = $operation;
+            }
         }
 
         return $this;
