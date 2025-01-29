@@ -202,10 +202,10 @@ class SonarOperationsTest extends TestCase
                     foreach ($options['json']['variables'] as $variable) {
                         if (
                             $variable !== [
+                                'name' => 'fake_value_1',
                                 'activates_account' => 'fake_value_1',
                                 'color' => 'fake_value_1',
                                 'icon' => 'fake_value_1',
-                                'name' => 'fake_value_1',
                             ]
                         ) {
                             return false;

@@ -79,7 +79,14 @@ class Mutation extends GraphqlQuery
         $query = new GraphqlQuery($mutation_name, $return_properties);
 
         if (in_array($type, ['update', 'create'], true)) {
-            $required_properties = array_intersect_key($object->toArray(), $this->object->get_mutate_properties($type));
+            $required_properties = [];
+
+            foreach ($this->object->get_mutate_properties($type) as $property => $value) {
+                if (!is_null($object->$property)) {
+                    $required_properties[$property] = $object->$property;
+                }
+            }
+
             $this->addVariable(['input' => $required_properties], $mutation_input_name);
 
             $query->addVariable(['input' => $required_properties], $mutation_input_name);

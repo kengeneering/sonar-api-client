@@ -84,31 +84,43 @@ class Address extends SonarObject
     ];
 
     const UPDATE_PROPERTIES = [
-        'name',
-        'account_status_id',
-        'account_type_id',
-        'serviceable_address_id',
-        'account_group_ids',
-        'company_id',
-        'prorate',
+        'line1',
+        'line2',
+        'city',
+        'subdivision',
+        'zip',
+        'country',
+        'latitude',
+        'longitude',
+        'timezone',
+        'network_site_ids',
+        'address_status_id',
+        'is_anchor',
+        'anchor_address_id',
+        'billing_default_id',
+        'attainable_download_speed',
+        'attainable_upload_speed',
         'custom_field_data',
         'unset_custom_field_data',
-        'note',
         'files',
-        'tasks',
+        'unset_line2',
+        'unset_anchor_address_id',
+        'unset_billing_default_id',
+        'unset_attainable_download_speed',
+        'unset_attainable_upload_speed',
     ];
 
     public function mutate_function_name(string $mutation_type): string
     {
         $address_type = $this->type ?? 'serviceable';
 
-        return ucfirst($mutation_type).ucfirst($address_type).'Address';
+        return $mutation_type . ucfirst($address_type) . 'Address';
     }
 
     public function mutate_function_input_name(string $mutation_type): string
     {
         $address_type = $this->type ?? 'serviceable';
 
-        return ucfirst($mutation_type).ucfirst($address_type).'AddressMutationInput';
+        return ucfirst($mutation_type) . ucfirst($address_type) . 'AddressMutationInput';
     }
 }

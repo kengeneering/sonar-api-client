@@ -40,7 +40,7 @@ class AddressTest extends TestCase
             'type' => 'mailing',
             'zip' => 'fake_value',
         ]);
-        $this->assertEquals($address->get_mutation_name('create'), 'CreateMailingAddress');
+        $this->assertEquals($address->get_mutation_name('create'), 'createMailingAddress');
         $this->assertEquals($address->get_mutation_input_name('create'), 'CreateMailingAddressMutationInput');
     }
 }

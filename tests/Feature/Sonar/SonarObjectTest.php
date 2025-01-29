@@ -67,10 +67,10 @@ class SonarObjectTest extends TestCase
                     foreach ($options['json']['variables'] as $variable) {
                         if (
                             $variable !== [
+                                'name' => 'fake_value_0',
                                 'activates_account' => 'fake_value_0',
                                 'color' => 'fake_value_0',
                                 'icon' => 'fake_value_0',
-                                'name' => 'fake_value_0',
                             ]
                         ) {
                             return false;
@@ -145,10 +145,10 @@ class SonarObjectTest extends TestCase
                     foreach ($options['json']['variables'] as $variable) {
                         if (
                             $variable !== [
+                                'name' => 'fake_value_0',
                                 'activates_account' => 'fake_value_0',
                                 'color' => 'fake_value_0',
                                 'icon' => 'fake_value_0',
-                                'name' => 'fake_value_0',
                             ] && $variable !== 'fake_value_0'
                         ) {
                             return false;
