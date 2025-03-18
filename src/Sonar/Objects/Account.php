@@ -51,6 +51,7 @@ class Account extends SonarObject
         'account_service' => 'many',
         'address' => 'many',
         'custom_field_data' => 'many',
+        'log' => 'many',
     ];
 
     const CREATE_PROPERTIES = [
@@ -101,12 +102,18 @@ class Account extends SonarObject
         return $this->batchMutation($query, $batch_request);
     }
 
+    public function archive(bool $batch_request = false): Mutation|self
+    {
+        $this->existOrFail();
+        $query = (new Query('archiveAccount', ['id']))->addVariable([$this->id], 'id');
+
+        return $this->batchMutation($query, $batch_request);
+    }
+
     public function serviceable_address(): ?Address
     {
-        if (! $this->exists()) {
-            throw new Exception('this object does not exist in sonar and does not have a serviceable address');
-        }
-        if (! is_null($this->addresses)) {
+        $this->existOrFail();
+        if (!is_null($this->addresses)) {
             foreach ($this->addresses as $address) {
                 if ($address->serviceable === true) {
                     return $address;

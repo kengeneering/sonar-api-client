@@ -330,4 +330,10 @@ class SonarObject
 
         return $object;
     }
+
+    public function existOrFail() {
+        if (! $this->exists()) {
+            throw new Exception('this object does not exist in sonar');
+        }
+    }
 }
