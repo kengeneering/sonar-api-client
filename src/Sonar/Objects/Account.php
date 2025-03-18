@@ -18,11 +18,15 @@ use Exception;
  * @property string $next_bill_date
  * @property int $next_recurring_charge_amount
  * @property int $parent_account_id
+ * @property string|null $archived_at
+ * @property bool|null $is_eligible_for_archive
+ * @property int|null $archived_by_user_id
  * @property AccountType|null $account_type
  * @property AccountStatus|null $account_status
  * @property array<AccountService>|null $account_services
  * @property array<Address>|null $addresses
  * @property array<CustomFieldData>|null $custom_field_data
+ * @property array<Log>|null $logs
  */
 class Account extends SonarObject
 {
@@ -36,6 +40,9 @@ class Account extends SonarObject
         'account_type_id',
         'activation_date',
         'activation_time',
+        'is_eligible_for_archive',
+        'archived_at',
+        'archived_by_user_id',
         'company_id',
         'data_usage_percentage',
         'is_delinquent',

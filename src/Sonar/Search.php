@@ -33,9 +33,9 @@ class Search
     }
 
     /**
-     * @param  array<mixed>  $attributes
+     * @param  array<mixed>|string  $attributes
      */
-    private function addSearch(array $attributes, string $type = 'string_fields'): void
+    private function addSearch(array|string $attributes, string $type = 'string_fields'): void
     {
         $this->sub_searches[$type][] = $attributes;
     }
@@ -106,6 +106,24 @@ class Search
                 'search_value' => $value,
             ],
             'boolean_fields'
+        );
+
+        return $this->parent_query;
+    }
+
+    public function exists(string $attribute) {
+        $this->addSearch(
+            $attribute,
+            'exists'
+        );
+
+        return $this->parent_query;
+    }
+
+    public function unset(string $attribute) {
+        $this->addSearch(
+            $attribute,
+            'unset_fields'
         );
 
         return $this->parent_query;

@@ -15,7 +15,7 @@ class QueryTest extends TestCase
     {
         $query = (new Query(AccountStatus::class))->add(Account::class);
 
-        $this->assertEquals('account_statuses { entities {id sonar_unique_id created_at updated_at _version activates_account color icon name accounts { entities {id sonar_unique_id created_at updated_at _version account_status_id account_type_id activation_date activation_time company_id data_usage_percentage is_delinquent name next_bill_date next_recurring_charge_amount parent_account_id}}}}', (string) $query);
+        $this->assertEquals('account_statuses { entities {id sonar_unique_id created_at updated_at _version activates_account color icon name accounts { entities {id sonar_unique_id created_at updated_at _version account_status_id account_type_id activation_date activation_time is_eligible_for_archive archived_at archived_by_user_id company_id data_usage_percentage is_delinquent name next_bill_date next_recurring_charge_amount parent_account_id}}}}', (string) $query);
     }
 
     public function test_parent_and_child_functions()
@@ -25,7 +25,7 @@ class QueryTest extends TestCase
             ->addToParent(Account::class)
             ->addToChild(AccountStatus::class);
 
-        $this->assertEquals('account_statuses { entities {id sonar_unique_id created_at updated_at _version activates_account color icon name accounts { entities {id sonar_unique_id created_at updated_at _version account_status_id account_type_id activation_date activation_time company_id data_usage_percentage is_delinquent name next_bill_date next_recurring_charge_amount parent_account_id}} accounts { entities {id sonar_unique_id created_at updated_at _version account_status_id account_type_id activation_date activation_time company_id data_usage_percentage is_delinquent name next_bill_date next_recurring_charge_amount parent_account_id account_status {id sonar_unique_id created_at updated_at _version activates_account color icon name}}}}}', (string) $query);
+        $this->assertEquals('account_statuses { entities {id sonar_unique_id created_at updated_at _version activates_account color icon name accounts { entities {id sonar_unique_id created_at updated_at _version account_status_id account_type_id activation_date activation_time is_eligible_for_archive archived_at archived_by_user_id company_id data_usage_percentage is_delinquent name next_bill_date next_recurring_charge_amount parent_account_id}} accounts { entities {id sonar_unique_id created_at updated_at _version account_status_id account_type_id activation_date activation_time is_eligible_for_archive archived_at archived_by_user_id company_id data_usage_percentage is_delinquent name next_bill_date next_recurring_charge_amount parent_account_id account_status {id sonar_unique_id created_at updated_at _version activates_account color icon name}}}}}', (string) $query);
     }
 
     public function test_query_build()
@@ -48,7 +48,7 @@ class QueryTest extends TestCase
     public function test_build_owned_by_query()
     {
         $query = Address::query()->addToChild(Account::class);
-        $this->assertEquals('addresses { entities {id sonar_unique_id created_at updated_at _version address_status_id addressable_id addressable_type anchor_address_id attainable_download_speed attainable_upload_speed avalara_pcode billing_default_id census_year city country county fips fips_source is_anchor latitude line1 line2 longitude serviceable subdivision timezone type zip addressable { __typename ... on  Account {id sonar_unique_id created_at updated_at _version account_status_id account_type_id activation_date activation_time company_id data_usage_percentage is_delinquent name next_bill_date next_recurring_charge_amount parent_account_id}}}}', (string) $query);
+        $this->assertEquals('addresses { entities {id sonar_unique_id created_at updated_at _version address_status_id addressable_id addressable_type anchor_address_id attainable_download_speed attainable_upload_speed avalara_pcode billing_default_id census_year city country county fips fips_source is_anchor latitude line1 line2 longitude serviceable subdivision timezone type zip addressable { __typename ... on  Account {id sonar_unique_id created_at updated_at _version account_status_id account_type_id activation_date activation_time is_eligible_for_archive archived_at archived_by_user_id company_id data_usage_percentage is_delinquent name next_bill_date next_recurring_charge_amount parent_account_id}}}}', (string) $query);
     }
 
     public function test_custom_paginator()
@@ -79,7 +79,7 @@ class QueryTest extends TestCase
         $Gquery = $query->build();
 
         $this->assertMatchesRegularExpression(
-            '/account_statuses\(reverse_relation_filters: \$[a-z]{26} paginator: \$[a-z]{26} \) { entities {id sonar_unique_id created_at updated_at _version activates_account color icon name accounts { entities {id sonar_unique_id created_at updated_at _version account_status_id account_type_id activation_date activation_time company_id data_usage_percentage is_delinquent name next_bill_date next_recurring_charge_amount parent_account_id}}}}/',
+            '/account_statuses\(reverse_relation_filters: \$[a-z]{26} paginator: \$[a-z]{26} \) { entities {id sonar_unique_id created_at updated_at _version activates_account color icon name accounts { entities {id sonar_unique_id created_at updated_at _version account_status_id account_type_id activation_date activation_time is_eligible_for_archive archived_at archived_by_user_id company_id data_usage_percentage is_delinquent name next_bill_date next_recurring_charge_amount parent_account_id}}}}/',
             (string) $query
         );
         $rrf_variables = $Gquery->getVariables()['reverse_relation_filters'];

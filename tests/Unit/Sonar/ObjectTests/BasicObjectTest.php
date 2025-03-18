@@ -453,7 +453,7 @@ class BasicObjectTest extends TestCase
                 'url',
                 $this->callback(function ($options) {
 
-                    $pattern = '/query request\( \$[a-z]{26}: \[Search\]  \$[a-z]{26}: Paginator \) {operation_0: account_statuses\(search: \$[a-z]{26} paginator: \$[a-z]{26} \) { entities {id sonar_unique_id created_at updated_at _version activates_account color icon name accounts { entities {id sonar_unique_id created_at updated_at _version account_status_id account_type_id activation_date activation_time company_id data_usage_percentage is_delinquent name next_bill_date next_recurring_charge_amount parent_account_id}}}} }/';
+                    $pattern = '/query request\( \$[a-z]{26}: \[Search\]  \$[a-z]{26}: Paginator \) {operation_0: account_statuses\(search: \$[a-z]{26} paginator: \$[a-z]{26} \) { entities {id sonar_unique_id created_at updated_at _version activates_account color icon name accounts { entities {id sonar_unique_id created_at updated_at _version account_status_id account_type_id activation_date activation_time is_eligible_for_archive archived_at archived_by_user_id company_id data_usage_percentage is_delinquent name next_bill_date next_recurring_charge_amount parent_account_id}}}} }/';
 
 
 
