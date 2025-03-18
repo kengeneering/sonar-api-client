@@ -43,4 +43,23 @@ class Log extends SonarObject
     const RELATED_OBJECTS = [
         'user' => 'one',
     ];
+
+    public function previousArray() {
+        return $this->parseStringAsJson('previous');
+    }
+
+    public function currentArray() {
+        return $this->parseStringAsJson('current');
+    }
+
+    public function relationArray() {
+        return $this->parseStringAsJson('relation_data');
+    }
+
+    private function parseStringAsJson(string $property) {
+        if (is_null($this->$property)) {
+            return null;
+        }
+        return json_decode($this->$property);
+    }
 }
