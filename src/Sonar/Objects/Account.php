@@ -4,7 +4,7 @@ namespace Kengineering\Sonar\Objects;
 
 use Kengineering\Sonar\Graphql\Query;
 use Kengineering\Sonar\Operations\Mutation;
-use Exception;
+use Kengineering\Sonar\Traits\CanHaveNote;
 
 /**
  * @property int $account_status_id
@@ -30,6 +30,8 @@ use Exception;
  */
 class Account extends SonarObject
 {
+    use CanHaveNote;
+    
     const PROPERTIES = [
         'id',
         'sonar_unique_id',
@@ -59,6 +61,7 @@ class Account extends SonarObject
         'address' => 'many',
         'custom_field_data' => 'many',
         'log' => 'many',
+        'note' => 'many',
     ];
 
     const CREATE_PROPERTIES = [
@@ -112,7 +115,7 @@ class Account extends SonarObject
     public function archive(bool $batch_request = false): Mutation|self
     {
         $this->existOrFail();
-        $query = (new Query('archiveAccount', ['id']))->addVariable([$this->id], 'id');
+        $query = (new Query('archiveAccount', ['id']))->addVariable(['id' => $this->id], 'Int64Bit', true);
 
         return $this->batchMutation($query, $batch_request);
     }

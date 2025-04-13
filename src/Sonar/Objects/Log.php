@@ -60,6 +60,6 @@ class Log extends SonarObject
         if (is_null($this->$property)) {
             return null;
         }
-        return json_decode($this->$property);
+        return json_decode($this->$property, true);
     }
 }
