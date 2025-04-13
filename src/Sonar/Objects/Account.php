@@ -4,7 +4,7 @@ namespace Kengineering\Sonar\Objects;
 
 use Kengineering\Sonar\Graphql\Query;
 use Kengineering\Sonar\Operations\Mutation;
-use Kengineering\Sonar\Traits\CanHaveNote;
+use Kengineering\Sonar\Traits\CanHaveNotes;
 
 /**
  * @property int $account_status_id
@@ -30,8 +30,8 @@ use Kengineering\Sonar\Traits\CanHaveNote;
  */
 class Account extends SonarObject
 {
-    use CanHaveNote;
-    
+    use CanHaveNotes;
+
     const PROPERTIES = [
         'id',
         'sonar_unique_id',
