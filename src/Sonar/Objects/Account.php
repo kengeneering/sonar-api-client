@@ -24,6 +24,7 @@ use Kengineering\Sonar\Traits\CanHaveNotes;
  * @property AccountType|null $account_type
  * @property AccountStatus|null $account_status
  * @property array<AccountService>|null $account_services
+ * @property array<Contact>|null $contacts
  * @property array<Address>|null $addresses
  * @property array<CustomFieldData>|null $custom_field_data
  * @property array<Log>|null $logs
@@ -62,6 +63,7 @@ class Account extends SonarObject
         'custom_field_data' => 'many',
         'log' => 'many',
         'note' => 'many',
+        'contact' => 'many',
     ];
 
     const CREATE_PROPERTIES = [
