@@ -114,6 +114,19 @@ class Account extends SonarObject
         return $this->batchMutation($query, $batch_request);
     }
 
+    public function primaryContact(): ?Contact {
+        if ($this->contacts === null) {
+            return null;
+        }
+
+        foreach ($this->contacts as $contact) {
+            if ($contact->primary) {
+                return $contact;
+            }
+        }
+        return null;
+    }
+
     public function archive(bool $batch_request = false): Mutation|self
     {
         $this->existOrFail();
