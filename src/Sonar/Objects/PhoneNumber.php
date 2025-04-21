@@ -30,6 +30,7 @@ class PhoneNumber extends SonarObject
     ];
 
     const RELATED_OBJECTS = [
+        'phone_number_type' => 'one',
         'contact' => 'one',
     ];
 }

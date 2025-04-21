@@ -18,6 +18,7 @@ namespace Kengineering\Sonar\Objects;
  * @property bool $skips_validation
  * @property int $ticket_id
  * @property JobType $job_type
+ * @property Account $account
  */
 class Job extends SonarObject
 {
@@ -44,6 +45,7 @@ class Job extends SonarObject
     ];
 
     const RELATED_OBJECTS = [
+        'account' => 'owned_by',
         'job_type' => 'one',
     ];
 

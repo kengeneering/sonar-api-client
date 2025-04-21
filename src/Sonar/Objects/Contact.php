@@ -12,6 +12,7 @@ namespace Kengineering\Sonar\Objects;
  * @property bool $primary
  * @property string $role
  * @property string $username
+ * @property array<PhoneNumber> $phone_numbers
  */
 class Contact extends SonarObject
 {
