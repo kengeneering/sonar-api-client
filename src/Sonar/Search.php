@@ -2,6 +2,7 @@
 
 namespace Kengineering\Sonar;
 
+use DateTime;
 use Kengineering\Sonar\Operations\Query;
 use Exception;
 
@@ -12,7 +13,7 @@ class Search
     const RANGE_OPERATORS = ['>=' => 'GTE', '>' => 'GT', '<=' => 'LTE', '<' => 'LT', '==' => 'EQ', '!=' => 'NEQ'];
 
     /**
-     * @var array<array<array<mixed>>>
+     * @var array<array<string|array<mixed>>>
      */
     private $sub_searches = [];
 
@@ -41,7 +42,7 @@ class Search
     }
 
     /**
-     * @return array<array<array<mixed>>>
+     * @return array<array<string|array<mixed>>>
      */
     public function getSearchArray(): array
     {
@@ -80,6 +81,40 @@ class Search
         return $this->parent_query;
     }
 
+    public function dateSearch(string $attribute, DateTime $value, string $range_operator = '=='): ?Query
+    {
+        $this->checkRangeOperator($range_operator);
+        $range_operator = self::RANGE_OPERATORS[$range_operator];
+
+        $this->addSearch(
+            [
+                'attribute' => $attribute,
+                'search_value' => $value->format('y-m-d'),
+                'operator' => $range_operator,
+            ],
+            'integer_fields'
+        );
+
+        return $this->parent_query;
+    }
+
+    public function DatetimeSearch(string $attribute, DateTime $value, string $range_operator = '=='): ?Query
+    {
+        $this->checkRangeOperator($range_operator);
+        $range_operator = self::RANGE_OPERATORS[$range_operator];
+
+        $this->addSearch(
+            [
+                'attribute' => $attribute,
+                'search_value' => $value->format('c'),
+                'operator' => $range_operator,
+            ],
+            'datetime_fields'
+        );
+
+        return $this->parent_query;
+    }
+
     public function floatSearch(string $attribute, float $value, string $range_operator = '='): ?Query
     {
         $this->checkRangeOperator($range_operator);
@@ -111,7 +146,8 @@ class Search
         return $this->parent_query;
     }
 
-    public function exists(string $attribute) {
+
+    public function exists(string $attribute): ?Query {
         $this->addSearch(
             $attribute,
             'exists'
@@ -120,7 +156,7 @@ class Search
         return $this->parent_query;
     }
 
-    public function unset(string $attribute) {
+    public function unset(string $attribute): ?Query {
         $this->addSearch(
             $attribute,
             'unset_fields'
