@@ -9,6 +9,7 @@ use Kengineering\Sonar\Request;
 use Kengineering\Sonar\Search;
 use Exception;
 use GuzzleHttp\Client;
+use Kengineering\Sonar\Sort;
 
 class Query extends GraphqlQuery
 {
@@ -19,6 +20,7 @@ class Query extends GraphqlQuery
     private ?Client $client;
 
     public Search $search;
+    public Sort $sort;
 
     /**
      * @var array<array<mixed>>|null
@@ -34,6 +36,7 @@ class Query extends GraphqlQuery
         $this->client = $client;
 
         $this->search = new Search($this);
+        $this->sort = new Sort($this);
         $this->root_node = new Node($root_object);
         $this->node_pointer = $this->root_node;
     }
@@ -127,6 +130,7 @@ class Query extends GraphqlQuery
     private function setUpVariables(GraphqlQuery $query): GraphqlQuery
     {
         $query = $this->search->addVarsToQuery($this);
+        $query = $this->sort->addVarsToQuery($this);
         $query = $this->setRRF();
         $query = $this->setPagination();
 
