@@ -17,7 +17,7 @@ use Exception;
  * @property string $name_override
  * @property string $next_bill_date
  * @property int $number_of_times_billed
- * @property int $package_id
+ * @property ?int $package_id
  * @property int $price_override
  * @property string $price_override_reason
  * @property int $quantity

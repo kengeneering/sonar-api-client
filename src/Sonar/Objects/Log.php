@@ -44,19 +44,36 @@ class Log extends SonarObject
         'user' => 'one',
     ];
 
-    public function previousArray() {
+    /**
+     * @return ?array<mixed>
+     */
+
+    public function previousArray()
+    {
         return $this->parseStringAsJson('previous');
     }
+    /**
+     * @return ?array<mixed>
+     */
 
-    public function currentArray() {
+    public function currentArray()
+    {
         return $this->parseStringAsJson('current');
     }
-
-    public function relationArray() {
+    /**
+     * @return ?array<mixed>
+     */
+    public function relationArray()
+    {
         return $this->parseStringAsJson('relation_data');
     }
 
-    private function parseStringAsJson(string $property) {
+    /**
+     * @param string $property
+     * @return ?array<mixed>
+     */
+    private function parseStringAsJson(string $property)
+    {
         if (is_null($this->$property)) {
             return null;
         }

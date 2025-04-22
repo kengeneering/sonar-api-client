@@ -47,6 +47,7 @@ class Job extends SonarObject
     const RELATED_OBJECTS = [
         'account' => 'owned_by',
         'job_type' => 'one',
+        'user' => 'many',
     ];
 
     const OWNED_ACCESS_NAME = 'jobbable';
