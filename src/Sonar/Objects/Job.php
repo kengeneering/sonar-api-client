@@ -50,5 +50,17 @@ class Job extends SonarObject
         'user' => 'many',
     ];
 
+    const CREATE_PROPERTIES = [
+        'job_type_id',
+        'ticket_id',
+        'scheduled_datetime',
+        'length_in_minutes',
+        'jobbable_type',
+        'jobbable_id',
+        'user_ids',
+        'note'
+
+    ];
+
     const OWNED_ACCESS_NAME = 'jobbable';
 }

@@ -93,6 +93,7 @@ class Account extends SonarObject
         'note',
         'files',
         'tasks',
+        'unset_serviceable_address_id'
     ];
 
     public function addService(int|Service $service, bool $batch_request = false, int $quantity = 1): Mutation|self
@@ -114,7 +115,8 @@ class Account extends SonarObject
         return $this->batchMutation($query, $batch_request);
     }
 
-    public function primaryContact(): ?Contact {
+    public function primaryContact(): ?Contact
+    {
         if ($this->contacts === null) {
             return null;
         }
@@ -131,6 +133,14 @@ class Account extends SonarObject
     {
         $this->existOrFail();
         $query = (new Query('archiveAccount', ['id']))->addVariable(['id' => $this->id], 'Int64Bit', true);
+
+        return $this->batchMutation($query, $batch_request);
+    }
+
+    public function unarchive(bool $batch_request = false): Mutation|self
+    {
+        $this->existOrFail();
+        $query = (new Query('unarchiveAccount', ['id']))->addVariable(['id' => $this->id], 'Int64Bit', true);
 
         return $this->batchMutation($query, $batch_request);
     }
