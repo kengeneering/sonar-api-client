@@ -29,6 +29,7 @@ namespace Kengineering\Sonar\Objects;
  * @property string $snmp_status_message
  * @property string $status
  * @property InventoryModel $inventory_model
+ * @property array<InventoryModelFieldData> $inventory_model_field_data
  * @property Address $address
  */
 class InventoryItem extends SonarObject
@@ -38,7 +39,8 @@ class InventoryItem extends SonarObject
         'sonar_unique_id',
         'created_at',
         'updated_at',
-        '_version', 'claimed_user_id',
+        '_version',
+        'claimed_user_id',
         'deployment_type_id',
         'flapping',
         'icmp_device_status',
@@ -68,6 +70,7 @@ class InventoryItem extends SonarObject
     const RELATED_OBJECTS = [
         'inventory_model' => 'one',
         'address' => 'owned_by',
+        'inventory_model_field_data' => 'many',
     ];
 
     const OWNED_ACCESS_NAME = 'inventoryitemable';

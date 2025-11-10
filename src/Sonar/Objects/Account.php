@@ -110,7 +110,7 @@ class Account extends SonarObject
 
         $package = $this->check_existance_return_object_value($package);
 
-        $query = (new Query('addPackageToAccount', ['id']))->addVariable(['input' => ['package_id' => $package, 'account_id' => $this->id, 'quantity' => $quantity]], 'AddPackageToAccountMutationInput');
+        $query = (new Query('addPackageToAccount', ['id']))->addVariable(['input' => ['package_id' => $package, 'account_id' => $this->id, 'quantity' => $quantity, 'prorate' => false]], 'AddPackageToAccountMutationInput');
 
         return $this->batchMutation($query, $batch_request);
     }

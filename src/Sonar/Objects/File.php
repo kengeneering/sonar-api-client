@@ -61,7 +61,7 @@ class File extends SonarObject
 
     public function assignFileToEntity($fileable_type, $fileable_id, bool $batch_request = false): Mutation|self
     {
-        $query = (new Query('linkFileToEntity', []))->addVariable(['input' => ['fileable_type' => $fileable_type, 'fileable_id' => $fileable_id, 'files' => [$this->id]]], 'LinkFileToEntityMutationInput');
+        $query = (new Query('linkFileToEntity', ['id']))->addVariable(['input' => ['fileable_type' => $fileable_type, 'fileable_id' => $fileable_id, 'files' => [['file_id' => $this->id]]]], 'LinkFileToEntityMutationInput');
 
         return $this->batchMutation($query, $batch_request);
     }

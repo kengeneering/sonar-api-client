@@ -23,4 +23,14 @@ class Note extends SonarObject
         'priority',
         'user_id',
     ];
+
+
+    const CREATE_PROPERTIES = [
+        'message',
+        'noteable_id',
+        'noteable_type',
+        'priority',
+    ];
+
+
 }

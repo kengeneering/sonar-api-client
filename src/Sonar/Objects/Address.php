@@ -68,6 +68,7 @@ class Address extends SonarObject
         'account' => 'owned_by',
         'custom_field_data' => 'many',
         'log' => 'many',
+        'inventory_item' => 'many',
     ];
 
     const OBJECT_MULTIPLE_NAME = 'addresses';
